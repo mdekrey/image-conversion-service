@@ -1,0 +1,125 @@
+openapi: "3.0.2"
+info:
+  version: 1.0.0
+  title: Image Resize Service
+  description: Resizes and stores images for a build
+  contact:
+    name: Matt DeKrey
+    email: mattdekrey@gmail.com
+servers:
+  - url: https://images.dekrey.net
+paths:
+  /generate/{sha}.{format}?w={width}&h={height}&g={groupId}:
+    get:
+      operationId: generateImageFormat
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: sha
+          in: path
+          description: SHA-1 hash of the source image
+          required: true
+          schema:
+            type: string
+            pattern: ^[0-9a-f]{40}$
+        - name: format
+          in: path
+          description: Format of the result image
+          required: true
+          schema:
+            $ref: '#/components/schemas/OutputFormat'
+        - name: width
+          in: path
+          description: Width of the resulting image.
+          required: true
+          schema:
+            type: integer
+        - name: height
+          in: path
+          description: Height of the resulting image.
+          required: true
+          schema:
+            type: integer
+        - name: groupId
+          in: path
+          description: Group of the associated image, such as a build number.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully generated an image with the given requirements. The body contains the URL to the final image.
+          content:
+            application/json:
+              schema:
+                type: string
+        400:
+          description: Unable to convert the image to the given format
+        404:
+          description: Source image could not be found
+  /upload/{sha}.{format}?w={width}&h={height}:
+    put:
+      operationId: uploadImage
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: sha
+          in: path
+          description: SHA-1 hash of the source image
+          required: true
+          schema:
+            type: string
+            pattern: ^[0-9a-f]{40}$
+        - name: format
+          in: path
+          description: Format of the result image
+          required: true
+          schema:
+            $ref: '#/components/schemas/OutputFormat'
+        - name: width
+          in: path
+          description: Width of the resulting image.
+          required: true
+          schema:
+            type: integer
+        - name: height
+          in: path
+          description: Height of the resulting image.
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: Image uploaded successfully; it may now be used for generating images
+  /purge/{groupId}:
+    post:
+      operationId: purgeGroup
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: groupId
+          in: path
+          description: Group of the associated image, such as a build number.
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Group has been removed
+        404:
+          description: Unknown group
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    OutputFormat:
+      type: string
+      enum:
+        - jpg
+        - png
+        - avi
+        - webp

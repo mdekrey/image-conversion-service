@@ -1,0 +1,11 @@
+{
+  "name": "image-resize-service",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+  },
+  "author": "Matt DeKrey",
+  "license": "ISC"
+}
