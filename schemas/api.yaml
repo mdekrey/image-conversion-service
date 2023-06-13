@@ -91,6 +91,8 @@ paths:
       responses:
         204:
           description: Image uploaded successfully; it may now be used for generating images
+        400:
+          description: Uploaded file did not match the given SHA
   /purge/{groupId}:
     post:
       operationId: purgeGroup
