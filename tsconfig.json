@@ -5,6 +5,7 @@
 		// Disallow JavaScript files from being imported
 		"allowJs": false,
 		"forceConsistentCasingInFileNames": true,
+		"esModuleInterop": true,
 
 		"baseUrl": "src",
 		"paths": {
