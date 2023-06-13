@@ -1,0 +1,17 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"compilerOptions": {
+		"strict": true,
+		// Disallow JavaScript files from being imported
+		"allowJs": false,
+		"forceConsistentCasingInFileNames": true,
+
+		"baseUrl": "src",
+		"paths": {
+			"@/*": [
+				"./*"
+			]
+		}
+	},
+	"include": ["src"]
+}
