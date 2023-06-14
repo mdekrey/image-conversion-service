@@ -1,6 +1,7 @@
 import express from 'express';
 import { PORT } from '@/config';
 import routes from '@/routes';
+import { apiKeyMiddleware } from './apiKeyMiddleware';
 
 const app = express();
 
@@ -9,6 +10,7 @@ app.use('/health', (req, res) => {
 	res.statusCode = 200;
 	res.send('OK');
 });
+app.use(apiKeyMiddleware);
 
 // TODO: API Key middleware
 for (const route of routes) {
