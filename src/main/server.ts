@@ -6,7 +6,7 @@ import { apiKeyMiddleware } from './apiKeyMiddleware';
 const app = express();
 
 app.use(express.json());
-app.use('/', (req, res) => {
+app.use(/^\/$/, (req, res) => {
 	res.statusCode = 200;
 	res.send('OK');
 });
