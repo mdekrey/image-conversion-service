@@ -6,6 +6,8 @@
 		"allowJs": false,
 		"forceConsistentCasingInFileNames": true,
 		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
 
 		"baseUrl": "src",
 		"paths": {

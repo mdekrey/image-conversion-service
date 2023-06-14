@@ -1,5 +1,11 @@
 import { config } from 'dotenv';
-config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
+config();
 
 export const CREDENTIALS = process.env.CREDENTIALS === 'true';
-export const { NODE_ENV, PORT = 5000, SECRET_KEY } = process.env;
+export const {
+	NODE_ENV,
+	PORT = 5000,
+	SECRET_KEY,
+	AZURE_STORAGE_ACCOUNT_NAME = '',
+	AZURE_STORAGE_ACCOUNT_KEY = '',
+} = process.env;

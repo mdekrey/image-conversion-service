@@ -9,7 +9,7 @@ info:
 servers:
   - url: https://images.dekrey.net
 paths:
-  /generate/{sha}.{format}?w={width}&h={height}&g={groupId}:
+  /generate/{groupId}/{width}/{height}/{sha}.{format}:
     get:
       operationId: generateImageFormat
       security:
@@ -57,7 +57,7 @@ paths:
           description: Unable to convert the image to the given format
         404:
           description: Source image could not be found
-  /upload/{sha}.{format}?w={width}&h={height}:
+  /upload/{sha}.{format}:
     put:
       operationId: uploadImage
       security:
@@ -75,19 +75,14 @@ paths:
           description: Format of the result image
           required: true
           schema:
-            $ref: '#/components/schemas/OutputFormat'
-        - name: width
-          in: path
-          description: Width of the resulting image.
-          required: true
-          schema:
-            type: integer
-        - name: height
-          in: path
-          description: Height of the resulting image.
-          required: true
-          schema:
-            type: integer
+            $ref: '#/components/schemas/InputFormat'
+      requestBody:
+        required: true
+        content:
+          image/*:
+            schema:
+              type: string
+              format: binary
       responses:
         204:
           description: Image uploaded successfully; it may now be used for generating images
@@ -123,5 +118,10 @@ components:
       enum:
         - jpg
         - png
-        - avi
+        - avif
         - webp
+    InputFormat:
+      type: string
+      enum:
+        - jpg
+        - png
