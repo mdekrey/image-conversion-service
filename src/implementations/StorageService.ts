@@ -99,14 +99,18 @@ export class StorageService {
 			...data,
 		};
 
-		await this.blobServiceClient
-			.getContainerClient(sourceImagesContainer)
-			.uploadBlockBlob(blobPath, image, image.length, {
+		const containerClient = this.blobServiceClient.getContainerClient(
+			sourceImagesContainer
+		);
+
+		if (!(await containerClient.getBlobClient(blobPath).exists())) {
+			await containerClient.uploadBlockBlob(blobPath, image, image.length, {
 				blobHTTPHeaders: {
 					blobContentType: `image/${format}`,
 				},
 			});
-		await this.sourceTableClient.createEntity(rowData);
+		}
+		await this.sourceTableClient.upsertEntity(rowData);
 	}
 
 	async getSourceImage(sha: string) {
@@ -165,11 +169,11 @@ export class StorageService {
 			queryOptions: { filter: odata`PartitionKey eq ${groupId}` },
 		});
 
-		let references = 0;
+		const references: string[] = [];
 		let images = 0;
 		for await (const entity of entitiesList) {
 			const blobName = entity.rowKey ?? '';
-			references++;
+			references.push(blobName);
 			try {
 				await this.imageUsageTableClient.deleteEntity(blobName, groupId);
 			} catch (ex) {
@@ -181,7 +185,10 @@ export class StorageService {
 				images++;
 			}
 		}
-		return { references, images };
+		for (const entity of references) {
+			await this.generatedTableClient.deleteEntity(groupId, entity);
+		}
+		return { references: references.length, images };
 	}
 
 	private async imageHasReferences(blobName: string) {
