@@ -1,0 +1,23 @@
+image:
+  pullPolicy: Always
+ingress:
+  annotations:
+    "cert-manager.io/cluster-issuer": letsencrypt
+podspec:
+  # kubectl create configmap -n img-convert env-vars --from-env-file=.env
+  env:
+    - name: AZURE_STORAGE_ACCOUNT_NAME
+      valueFrom:
+        configMapKeyRef:
+          name: env-vars
+          key: AZURE_STORAGE_ACCOUNT_NAME
+    - name: AZURE_STORAGE_ACCOUNT_KEY
+      valueFrom:
+        configMapKeyRef:
+          name: env-vars
+          key: AZURE_STORAGE_ACCOUNT_KEY
+    - name: SECRET_KEY
+      valueFrom:
+        configMapKeyRef:
+          name: env-vars
+          key: SECRET_KEY

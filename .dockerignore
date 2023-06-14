@@ -1,6 +1,7 @@
 .git
 Dockerfile
 .dockerignore
+/deployment
 
 node_modules
 /dist
